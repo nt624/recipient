@@ -1,0 +1,17 @@
+---
+import Header from '../components/Header.tsx';
+import RecipeForm from '../components/RecipeFrom.tsx';
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>レシピアプリ</title>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <Header />
+    <main class="p-4">
+      <RecipeForm client:load />
+    </main>
+  </body>
+</html>
