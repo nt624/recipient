@@ -1,5 +1,5 @@
 import axios from 'axios';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 export async function scrapeRecipe(url: string) {
   const { data: html } = await axios.get(url);
@@ -9,7 +9,7 @@ export async function scrapeRecipe(url: string) {
   const name = $('h1').first().text().trim();
   const ingredients: string[] = [];
 
-  $('ul.ingredients li').each((_, el) => {
+  $('ul.recipeIngredients__list li').each((_, el) => {
     ingredients.push($(el).text().trim());
   });
 

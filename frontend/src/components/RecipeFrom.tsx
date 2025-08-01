@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import IngredientList from './IngredientList.tsx';
+// import { set } from 'astro:schema';
 
 interface RecipeData {
   name: string;
@@ -9,25 +10,34 @@ interface RecipeData {
 export default function RecipeForm() {
   const [url, setUrl] = useState('');
   const [recipe, setRecipe] = useState<RecipeData | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if(!url) return;
     e.preventDefault();
+    setLoading(true);
 
-    // 実際はAPIにPOSTするなどですが、ここではモックで代用
-    const mockData: RecipeData = {
-      name: 'トマトパスタ',
-      ingredients: ['パスタ 200g', 'トマト缶 1缶', 'にんにく 1片', '塩', 'オリーブオイル'],
-    };
+    try {
+        const res = await fetch('http://localhost:3001/api/scrape', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url }),
+        });
 
-    // 本当は以下のようにAPIを呼び出す
-    // const res = await fetch(`${import.meta.env.PUBLIC_API_URL}/extract`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ url }),
-    // });
-    // const data = await res.json();
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.error || 'Failed to fetch recipe');
+        }
+        setRecipe(data);
+    } catch (error) {
+        console.error('API Error:', error);
+        alert('レシピの取得に失敗しました。URLを確認してください。');
+    } finally {
+        setLoading(false);
+    }
 
-    setRecipe(mockData);
   };
 
   return (
@@ -48,7 +58,7 @@ export default function RecipeForm() {
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          材料を取得
+          {loading ? "読み込み中..." : "材料を取得する"}
         </button>
       </form>
 
