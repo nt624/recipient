@@ -6,7 +6,7 @@ type CheerioAPI = cheerio.CheerioAPI;
 function scrapeKurashiru($: CheerioAPI) {
   const name = $('h1').first().text().trim();
   const ingredients: string[] = [];
-  $('ul.recipeIngredients__list li').each((_: any, el: any) => {
+  $('ul.ingredient-list li').each((_: any, el: any) => {
     ingredients.push($(el).text().trim());
   });
   return { name, ingredients };
