@@ -51,7 +51,7 @@ function scrapeKikkoman($: CheerioAPI) {
 function scrapeAjinomoto($: CheerioAPI) {
   const name = $('h1').first().text().trim();
   const ingredients: string[] = [];
-  $('.ingredient-list__item, .ingredient-list li').each((_: any, el: any) => {
+  $('ul.recipeIngredients__list li').each((_: any, el: any) => {
     ingredients.push($(el).text().trim());
   });
   return { name, ingredients };
