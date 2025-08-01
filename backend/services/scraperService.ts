@@ -13,10 +13,25 @@ function scrapeKurashiru($: CheerioAPI) {
 }
 
 function scrapeCookpad($: CheerioAPI) {
-  const name = $('.recipe-title').first().text().trim() || $('h1').first().text().trim();
+  const name = $('h1').first().text().trim();
   const ingredients: string[] = [];
-  $('.ingredient_name').each((_: any, el: any) => {
-    ingredients.push($(el).text().trim());
+  // 材料リストの各liをループ
+  $('.ingredient-list li').each((_: any, el: any) => {
+    // 材料名部分（aタグ複数＋span直下テキスト）
+    const names = [];
+    $(el).find('span a').each((_: any, a: any) => {
+      names.push($(a).text().trim());
+    });
+    // aタグ以外のspan直下テキスト（例: 「など」など）#3ではなど、のレアケース表示への対応はしない
+    const spanText = $(el).find('span').clone().children('a').remove().end().text().trim();
+    if (spanText) names.push(spanText);
+
+    // 分量部分
+    const quantity = $(el).find('bdi').text().trim();
+
+    // 材料名と分量を結合
+    const ingredient = names.join('・') + (quantity ? ` ${quantity}` : '');
+    ingredients.push(ingredient);
   });
   return { name, ingredients };
 }
