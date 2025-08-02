@@ -45,10 +45,10 @@ function scrapeDelishKitchen($: CheerioAPI) {
   return { name, ingredients };
 }
 
-function scrapeShirogohan($: CheerioAPI) {
+function scrapeSirogohan($: CheerioAPI) {
   const name = $('h1').first().text().trim();
   const ingredients: string[] = [];
-  $('.ingredient-list li, .ingredient-list__item').each((_: any, el: any) => {
+  $('.material-halfbox li').each((_: any, el: any) => {
     ingredients.push($(el).text().trim());
   });
   return { name, ingredients };
@@ -109,7 +109,7 @@ function getSiteType(url: string): string {
   if (hostname.includes('kurashiru')) return 'kurashiru';
   if (hostname.includes('cookpad')) return 'cookpad';
   if (hostname.includes('delishkitchen')) return 'delishkitchen';
-  if (hostname.includes('shirogohan')) return 'shirogohan';
+  if (hostname.includes('sirogohan')) return 'sirogohan';
   if (hostname.includes('kikkoman')) return 'kikkoman';
   if (hostname.includes('ajinomoto')) return 'ajinomoto';
   if (hostname.includes('mizkan')) return 'mizkan';
@@ -122,7 +122,7 @@ function extractRecipe(siteType: string, $: CheerioAPI) {
     case 'kurashiru': return scrapeKurashiru($);
     case 'cookpad': return scrapeCookpad($);
     case 'delishkitchen': return scrapeDelishKitchen($);
-    case 'shir0gohan': return scrapeShirogohan($);
+    case 'sirogohan': return scrapeSirogohan($);
     case 'kikkoman': return scrapeKikkoman($);
     case 'ajinomoto': return scrapeAjinomoto($);
     case 'mizkan': return scrapeMizkan($);
