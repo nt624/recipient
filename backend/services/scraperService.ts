@@ -75,8 +75,9 @@ function scrapeAjinomoto($: CheerioAPI) {
 function scrapeMizkan($: CheerioAPI) {
   const name = $('h1').first().text().trim();
   const ingredients: string[] = [];
-  $('.ingredient-list__item, .ingredient-list li').each((_: any, el: any) => {
-    ingredients.push($(el).text().trim());
+  $('.recipeTopAbout_ingredients li').each((_: any, el: any) => {
+    const text = $(el).text().trim();
+    if (text) ingredients.push(text);
   });
   return { name, ingredients };
 }
