@@ -37,9 +37,9 @@ function scrapeCookpad($: CheerioAPI) {
 }
 
 function scrapeDelishKitchen($: CheerioAPI) {
-  const name = $('.recipe-title').first().text().trim() || $('h1').first().text().trim();
+  const name = $('h1').first().text().trim();
   const ingredients: string[] = [];
-  $('.ingredient-list__item').each((_: any, el: any) => {
+  $('ul.ingredient-list li').each((_: any, el: any) => {
     ingredients.push($(el).text().trim());
   });
   return { name, ingredients };
@@ -135,5 +135,6 @@ export async function scrapeRecipe(url: string) {
   const html = await fetchHtml(url);
   const $ = cheerio.load(html);
   const siteType = getSiteType(url);
+  console.log(`Scraping ${siteType} recipe from: ${url}`);
   return extractRecipe(siteType, $);
 }
