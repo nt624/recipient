@@ -83,10 +83,15 @@ function scrapeMizkan($: CheerioAPI) {
 }
 
 function scrapeKyouNoRyouri($: CheerioAPI) {
-  const name = $('h1').first().text().trim();
+  const name = $('h1.ttl').first().text().trim();
   const ingredients: string[] = [];
-  $('.ingredient-list__item, .ingredient-list li').each((_: any, el: any) => {
-    ingredients.push($(el).text().trim());
+  $('#ingredients_list dl').each((_: any, el: any) => {
+    const dt = $(el).find('dt');
+    const ingredientName = dt.find('span.ingredient').text().trim();
+    const quantity = dt.find('span.floatright').text().trim();
+    if (ingredientName) {
+      ingredients.push(quantity ? `${ingredientName} ${quantity}` : ingredientName);
+    }
   });
   return { name, ingredients };
 }
