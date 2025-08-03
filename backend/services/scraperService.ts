@@ -17,20 +17,18 @@ function scrapeCookpad($: CheerioAPI) {
   const ingredients: string[] = [];
   // 材料リストの各liをループ
   $('.ingredient-list li').each((_: any, el: any) => {
-    // 材料名部分（aタグ複数＋span直下テキスト）
-    const names = [];
-    $(el).find('span a').each((_: any, a: any) => {
-      names.push($(a).text().trim());
+    const names: string[] = [];
+    $(el).find('span').contents().each((_: any, node: any) => {
+      if (node.type === 'tag' && node.name === 'a') {
+        names.push($(node).text().trim());
+      } else if (node.type === 'text') {
+        const text = node.data.trim();
+        if (text) names.push(text);
+      }
     });
-    // aタグ以外のspan直下テキスト（例: 「など」など）#3ではなど、のレアケース表示への対応はしない
-    const spanText = $(el).find('span').clone().children('a').remove().end().text().trim();
-    if (spanText) names.push(spanText);
-
     // 分量部分
     const quantity = $(el).find('bdi').text().trim();
-
-    // 材料名と分量を結合
-    const ingredient = names.join('・') + (quantity ? ` ${quantity}` : '');
+    const ingredient = names.join('') + (quantity ? ` ${quantity}` : '');
     ingredients.push(ingredient);
   });
   return { name, ingredients };
